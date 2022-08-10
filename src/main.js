@@ -1,1 +1,2 @@
-import("./bootstrap.js")
+import("./test.mjs")
+import('./test.js')
