@@ -1,16 +1,13 @@
-const path = require("path")
-const { VueLoaderPlugin } = require("vue-loader")
-const HtmlWebpackPlugin = require("html-webpack-plugin")
-const { ModuleFederationPlugin } = require("webpack").container
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { ModuleFederationPlugin } = require('webpack').container
 
 const shared = {
   vue: {
-    import: "vue/dist/vue.runtime.esm.js",
     singleton: true,
   },
-  "vue-demi": {},
-  "@vue/composition-api": {
-    import: "@vue/composition-api/dist/vue-composition-api.mjs",
+  'vue-demi': {},
+  '@vue/composition-api': {
     singleton: true,
   },
 }
@@ -19,37 +16,21 @@ const swcLoader = {
   test: /\.m?js$/,
   exclude: /(node_modules)/,
   use: {
-    loader: "swc-loader",
-    /*options: {
-      jsc: {
-        experimental: {
-          plugins: [
-            [
-              require.resolve("@swc/plugin-transform-imports"),
-              {
-                "element-ui": {
-                  transform: "element-ui/lib/{{member}}",
-                },
-              },
-            ],
-          ],
-        },
-      },
-    },*/
+    loader: 'swc-loader'
   },
 }
 
 module.exports = (env = {}) => ({
-  mode: "development",
+  mode: 'development',
   cache: true,
-  target: "web",
+  target: 'web',
   devtool: false,
-  entry: path.resolve(__dirname, "./src/main.js"),
+  entry: path.resolve(__dirname, './src/main.js'),
   output: {
-    publicPath: "/",
+    publicPath: '/',
   },
   resolve: {
-    extensions: [".vue", ".jsx", ".js", ".json"],
+    extensions: ['.vue', '.jsx', '.js', '.json'],
     alias: {
       // this isn't technically needed, since the default `vue` entry for bundlers
       // is a simple `export * from '@vue/runtime-dom`. However having this
@@ -60,27 +41,19 @@ module.exports = (env = {}) => ({
   },
   module: {
     rules: [
-      {
-        test: /\.vue$/,
-        use: "vue-loader",
-      },
       swcLoader,
     ],
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: "vue-demi",
-      library: { type: "var", name: "o2_mkt" },
-      filename: "remoteEntry.js",
-      exposes: {
-        HelloWorld: "./src/components/HelloWorld.vue",
-      },
+      name: 'vue-demi-test',
+      library: { type: 'var', name: 'o2_mkt' },
+      filename: 'remoteEntry.js',
       shared,
     }),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "./public/index.html"),
+      template: path.resolve(__dirname, './public/index.html'),
     }),
-    new VueLoaderPlugin(),
   ],
   devServer: {
     static: {
@@ -90,10 +63,10 @@ module.exports = (env = {}) => ({
     port: 5001,
     hot: true,
     headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-      "Access-Control-Allow-Headers":
-        "X-Requested-With, content-type, Authorization",
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers':
+        'X-Requested-With, content-type, Authorization',
     },
   },
 })
